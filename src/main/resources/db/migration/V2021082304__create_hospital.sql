@@ -14,7 +14,7 @@ CREATE TABLE public.hospital (
     address varchar(255),
     lat decimal(10, 8),
     log decimal(10, 8),
-    percent decimal(3, 2),
+    percent decimal(10, 2),
     resource_id bigint,
     created_at timestamp without time zone,
     CONSTRAINT fk_resource_id FOREIGN KEY (resource_id)
