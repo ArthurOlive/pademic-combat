@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.swagger.models.Response;
-
 @CrossOrigin
 @RestController
 public class ItemController {
@@ -22,8 +20,7 @@ public class ItemController {
     private ItemService itemService;
     
     @GetMapping("api/item")
-    public ResponseEntity<ApiResponse> get(){
-
+    public ResponseEntity<ApiResponse<Item>> get(){
         List<Item> items = itemService.getAll();
 
         ApiResponse<Item> api = new ApiResponse<Item>("Items registrados", items);

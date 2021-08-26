@@ -8,6 +8,9 @@ public class ApiResponse <T> implements Serializable {
     private String message;
     private List<T> data;
 
+    public ApiResponse() {
+    }
+
     public ApiResponse( String message, List<T> data) {
         super();
         this.message = message;

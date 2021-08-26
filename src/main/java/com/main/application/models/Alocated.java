@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 public class Alocated implements Serializable{
@@ -11,8 +14,9 @@ public class Alocated implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="alocated_generator")
 	@SequenceGenerator(name="alocated_generator", sequenceName="alocated_seq", allocationSize=1)
-    private long id;
-
+    private Long id;
+    
+    @NotNull
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Item itemAlocated;
 

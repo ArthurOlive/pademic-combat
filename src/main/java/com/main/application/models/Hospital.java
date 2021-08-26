@@ -5,9 +5,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+import org.springframework.lang.NonNull;
 @Entity
 public class Hospital implements Serializable {
 
@@ -29,7 +32,7 @@ public class Hospital implements Serializable {
 
     private BigDecimal percent;
 
-    @OneToOne(fetch=FetchType.LAZY)
+    @OneToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     private Resource resource;
 
     private LocalDateTime createdAt = LocalDateTime.now();

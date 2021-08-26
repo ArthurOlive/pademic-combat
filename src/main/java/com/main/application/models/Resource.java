@@ -1,7 +1,6 @@
 package com.main.application.models;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class Resource implements Serializable{
 	@SequenceGenerator(name="resource_generator", sequenceName="resource_seq", allocationSize=1)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Alocated> alocateds;
     
     private LocalDateTime createdAt = LocalDateTime.now();
