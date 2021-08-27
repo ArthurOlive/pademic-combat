@@ -1,4 +1,4 @@
-package com.main.application.exception.dto;
+package com.main.application.exceptions.dto;
 
 import java.util.Arrays;
 import java.util.List;

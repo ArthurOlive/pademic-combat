@@ -1,9 +1,9 @@
-package com.main.application.exception;
+package com.main.application.exceptions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.main.application.exception.dto.ApiError;
+import com.main.application.exceptions.dto.ApiError;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -60,5 +60,17 @@ public class RestExceprionHandler extends ResponseEntityExceptionHandler{
         new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), error);
         return new ResponseEntity<Object>(
         apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
+      HttpStatus status, WebRequest request) {
+
+      String error =  ex.getMessage();
+      ApiError apiError = 
+        new ApiError(HttpStatus.BAD_REQUEST, ex.getLocalizedMessage(), error);
+      return new ResponseEntity<Object>(
+        apiError, new HttpHeaders(), apiError.getStatus());
+
     }
 }

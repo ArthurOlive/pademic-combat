@@ -1,4 +1,4 @@
-package com.main.application.item;
+package com.main.application.controllers.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ItemTest {
+public class ItemControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

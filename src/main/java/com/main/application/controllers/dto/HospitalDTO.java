@@ -1,4 +1,4 @@
-package com.main.application.exception.dto;
+package com.main.application.controllers.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

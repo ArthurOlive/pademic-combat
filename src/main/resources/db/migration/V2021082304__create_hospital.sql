@@ -9,8 +9,8 @@ CREATE SEQUENCE public.hospital_seq
 DROP TABLE IF EXISTS public.hospital;
 CREATE TABLE public.hospital (
     id bigint primary key,
-    name varchar(255) unique,
-    cnpj varchar(14),
+    name varchar(255),
+    cnpj varchar(14) unique,
     address varchar(255),
     lat decimal(10, 8),
     log decimal(10, 8),

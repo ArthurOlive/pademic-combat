@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Alocated implements Serializable{
     
     @Id
@@ -16,8 +16,7 @@ public class Alocated implements Serializable{
 	@SequenceGenerator(name="alocated_generator", sequenceName="alocated_seq", allocationSize=1)
     private Long id;
     
-    @NotNull
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     private Item itemAlocated;
 
     private Integer quantity;

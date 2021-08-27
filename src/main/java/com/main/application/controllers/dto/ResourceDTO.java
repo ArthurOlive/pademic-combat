@@ -1,10 +1,8 @@
-package com.main.application.exception.dto;
+package com.main.application.controllers.dto;
 
+import java.io.Serializable;
 import java.util.List;
-
-import javax.validation.constraints.NotBlank;
-
-public class ResourceDTO {
+public class ResourceDTO implements Serializable {
 
     private List<AlocatedDTO> alocateds;
 

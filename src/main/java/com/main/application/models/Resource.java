@@ -2,11 +2,15 @@ package com.main.application.models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Resource implements Serializable{
     
     @Id
@@ -15,7 +19,7 @@ public class Resource implements Serializable{
     private Long id;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Alocated> alocateds;
+    private List<Alocated> alocateds = new ArrayList<Alocated>();
     
     private LocalDateTime createdAt = LocalDateTime.now();
 
