@@ -17,9 +17,6 @@ public class ItemControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
     
     @Test
     public void getAllItems() throws Exception{

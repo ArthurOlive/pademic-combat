@@ -1,6 +1,9 @@
 package com.main.application.services;
 
+import java.util.List;
+
 import com.main.application.models.History;
+import com.main.application.repositories.HistoryRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,10 +12,14 @@ import org.springframework.stereotype.Service;
 public class HistoryService {   
 
     @Autowired
-    private HistoryService historyService;
+    private HistoryRepository historyRepository;
  
     public void save(History history) {
-        historyService.save(history);
+        historyRepository.save(history);
+    }
+
+    public List<History> getAll() {
+        return historyRepository.findAll();
     }
 
 }

@@ -8,11 +8,12 @@ import javax.transaction.Transactional;
 import com.main.application.models.Alocated;
 import com.main.application.models.History;
 import com.main.application.models.Hospital;
-import com.main.application.models.Item;
 import com.main.application.models.OrderMigration;
 import com.main.application.models.Resource;
+import com.main.application.models.StatusOrder;
 import com.main.application.services.HistoryService;
 import com.main.application.services.HospitalService;
+import com.main.application.services.OrderMigrationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrderProcessor {
+
+    @Autowired
+    private OrderMigrationService orderMigrationService;
 
     @Autowired
     private HistoryService historyService;
@@ -71,28 +75,41 @@ public class OrderProcessor {
     } 
 
     @Transactional
-    public void process(OrderMigration order) throws InvalidAttributesException {
+    public void process(Long orderId) throws InvalidAttributesException {
+
+        OrderMigration order = orderMigrationService.getById(orderId);
 
         logger.info("Iniciando processamento de intercambio: " + order.getId());
 
         logger.info("Validando recursos de hospital 1 id :" + order.getHospital1().getId());
         if (!validateResources(order.getHospital1(), order.getResource1())) {
+            order.setStatus(StatusOrder.FAILED);
+            orderMigrationService.save(order);
             throw new InvalidAttributesException("A lista de recursos do hospital 1 não condiz com os recursos do hospital");
         }
 
         logger.info("Validando recursos de hospital 2 id :" + order.getHospital2().getId());
         if (!validateResources(order.getHospital2(), order.getResource2())) {
+            order.setStatus(StatusOrder.FAILED);
+            orderMigrationService.save(order);
+            throw new InvalidAttributesException("A lista de recursos do hospital 2 não condiz com os recursos do hospital");
+        }
+
+        //Entra logica de pesos.
+        if (alocatedScore(order.getResource1().getAlocateds()) != alocatedScore(order.getResource2().getAlocateds()) ) {
+            order.setStatus(StatusOrder.FAILED);
+            orderMigrationService.save(order);
             throw new InvalidAttributesException("A lista de recursos do hospital 2 não condiz com os recursos do hospital");
         }
 
         Hospital hospital1 = order.getHospital1();
-        Hospital hospital2 = order.getHospital1();
+        Hospital hospital2 = order.getHospital2();
 
         logger.info("Desalocando recursos de hospital 1");
         for (var desalocate : order.getResource1().getAlocateds()) {
             for (var alocated : hospital1.getResource().getAlocateds()) {
 
-                if (alocated.getItemAlocated().getId() == desalocate.getId()) {
+                if (alocated.getItemAlocated().getId() == desalocate.getItemAlocated().getId()) {
                     alocated.setQuantity(alocated.getQuantity() - desalocate.getQuantity());
                 }
 
@@ -104,14 +121,21 @@ public class OrderProcessor {
             boolean processed = false;
             for (var alocate : hospital1.getResource().getAlocateds()) {
 
-                if (alocate.getItemAlocated().getId() == alocated.getId()) {
+                if (alocate.getItemAlocated().getId() == alocated.getItemAlocated().getId()) {
                     alocate.setQuantity(alocated.getQuantity() + alocated.getQuantity());
                     processed = true;
                 }
 
             }
-            if(processed) {
+            if(!processed) {
                 logger.info("Não contem item id: " + alocated.getId());
+
+                Alocated a = new Alocated();
+
+                a.setItemAlocated(alocated.getItemAlocated());
+                a.setQuantity(alocated.getQuantity());
+
+                hospital2.getResource().getAlocateds().add(a);
             }
         }
 
@@ -119,7 +143,7 @@ public class OrderProcessor {
         for (var desalocate : order.getResource2().getAlocateds()) {
             for (var alocated : hospital2.getResource().getAlocateds()) {
 
-                if (alocated.getItemAlocated().getId() == desalocate.getId()) {
+                if (alocated.getItemAlocated().getId() == desalocate.getItemAlocated().getId()) {
                     alocated.setQuantity(alocated.getQuantity() - desalocate.getQuantity());
                 }
 
@@ -131,14 +155,21 @@ public class OrderProcessor {
             boolean processed = false;
             for (var alocate : hospital2.getResource().getAlocateds()) {
 
-                if (alocate.getItemAlocated().getId() == alocated.getId()) {
+                if (alocate.getItemAlocated().getId() == alocated.getItemAlocated().getId()) {
                     alocate.setQuantity(alocated.getQuantity() + alocated.getQuantity());
                     processed = true;
                 }
 
             }
-            if(processed) {
+            if(!processed) {
                 logger.info("Não contem item id: " + alocated.getId());
+
+                Alocated a = new Alocated();
+
+                a.setItemAlocated(alocated.getItemAlocated());
+                a.setQuantity(alocated.getQuantity());
+
+                hospital2.getResource().getAlocateds().add(a);
             }
         }
 
@@ -148,17 +179,20 @@ public class OrderProcessor {
 
         History history1 = new History();
         history1.setHospitalTo(hospital1);
-        history1.setHospitalTo(hospital2);
+        history1.setHospitalFrom(hospital2);
         history1.setResource(order.getResource1());
         
         History history2 = new History();
         history2.setHospitalTo(hospital2);
-        history2.setHospitalTo(hospital1);
+        history2.setHospitalFrom(hospital1);
         history2.setResource(order.getResource2());
 
         logger.info("Salvando historico");
         historyService.save(history1);
         historyService.save(history2);
+
+        order.setStatus(StatusOrder.PROCESSED);
+        orderMigrationService.save(order);
     }
 
 }

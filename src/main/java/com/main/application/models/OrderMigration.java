@@ -13,16 +13,16 @@ public class OrderMigration implements Serializable {
 	@SequenceGenerator(name="order_generator", sequenceName="order_seq", allocationSize=1)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Hospital hospital1;
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Hospital hospital2;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Resource resource1;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Resource resource2;
 
     private String message;

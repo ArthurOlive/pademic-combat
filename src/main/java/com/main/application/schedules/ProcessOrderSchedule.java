@@ -37,12 +37,12 @@ public class ProcessOrderSchedule {
             
             try {
 
-                orderProcessor.process(order);
+                orderProcessor.process(order.getId());
 
             } catch (Exception e) {
 
                 e.printStackTrace();
-
+                
             }
         }
 

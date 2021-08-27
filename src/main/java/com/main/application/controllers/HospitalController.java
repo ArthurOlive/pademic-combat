@@ -14,8 +14,10 @@ import com.main.application.controllers.dto.ApiResponse;
 import com.main.application.controllers.dto.HospitalDTO;
 import com.main.application.controllers.dto.OrderMigrationDTO;
 import com.main.application.controllers.dto.UpdatePercentDTO;
+import com.main.application.models.History;
 import com.main.application.models.Hospital;
 import com.main.application.models.Item;
+import com.main.application.services.HistoryService;
 import com.main.application.services.HospitalService;
 import com.main.application.services.ItemService;
 
@@ -41,6 +43,9 @@ public class HospitalController {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private HistoryService historyService;
 
     private Logger logger = LoggerFactory.getLogger(HospitalController.class);
 
@@ -141,6 +146,16 @@ public class HospitalController {
         List<Map<Long, BigDecimal>> response = new ArrayList<>();
         response.add(quantiyItemsPerHospitals);
         ApiResponse<Map<Long, BigDecimal>> api = new ApiResponse<>("Items por usina", response);
+
+        return ResponseEntity.ok(api);
+    }
+
+    @GetMapping("api/hospital/histories") 
+    public ResponseEntity<ApiResponse<History>> getHistory() {
+
+        var histories = historyService.getAll();
+        
+        ApiResponse<History> api = new ApiResponse<>("Historico de intercambios", histories);
 
         return ResponseEntity.ok(api);
     }

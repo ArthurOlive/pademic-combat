@@ -13,13 +13,13 @@ public class History implements Serializable {
 	@SequenceGenerator(name="alocated_generator", sequenceName="alocated_seq", allocationSize=1)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Hospital hospitalFrom;
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Hospital hospitalTo;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Resource resource;
 
     private LocalDateTime createdAt = LocalDateTime.now();
