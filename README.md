@@ -1,5 +1,5 @@
 # Pademic Combat
-## Quick
+## Primeiro passo
 Para inicializar o projeto em sua maquina é necessario criar uma base de dados no postgres chamada ```pademic-combat```.
 ## Documentação 
 Com o projeto rodado acesse.
